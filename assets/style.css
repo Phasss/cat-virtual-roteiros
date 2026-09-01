@@ -1,0 +1,343 @@
+:root {
+  --bg: #f3f6f4;
+  --surface: #ffffff;
+  --surface-2: #e7eeea;
+  --text: #16211d;
+  --text-muted: #526058;
+  --border: #d6deda;
+  --accent: #c22a63;
+  --accent-soft: #f6dce7;
+  --accent-2: #a8791a;
+  --accent-2-soft: #f0e3c8;
+  --teal: #0e6e6c;
+  --teal-soft: #dcedea;
+  --shadow: 0 1px 2px rgba(20, 30, 25, 0.06), 0 8px 24px -12px rgba(20, 30, 25, 0.18);
+  --gradient-hero: linear-gradient(150deg, #0e6e6c 0%, #7a2456 65%, #c22a63 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101a16;
+    --surface: #16211c;
+    --surface-2: #1d2a23;
+    --text: #eaf1ec;
+    --text-muted: #9fb2a6;
+    --border: #2b3a32;
+    --accent: #ff7fa6;
+    --accent-soft: #3a2130;
+    --accent-2: #e3b23c;
+    --accent-2-soft: #3a2f16;
+    --teal: #56c8c2;
+    --teal-soft: #163330;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.5);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Work Sans", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: "Fraunces", serif;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.mono {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+a {
+  color: inherit;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--gradient-hero);
+  padding: 34px 24px 40px;
+  margin: 0 0 26px;
+  color: #ffffff;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 40%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-name {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-tag {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffd7e6;
+  margin-bottom: 10px;
+}
+
+.hero h1 {
+  font-size: clamp(1.9rem, 6vw, 2.6rem);
+  line-height: 1.08;
+}
+
+.hero p.tagline {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.02rem;
+  margin: 12px 0 0;
+  max-width: 48ch;
+}
+
+.stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.stat-chip {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+  padding: 7px 14px;
+}
+
+.pdf-button {
+  margin-top: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: #ffffff;
+  color: var(--accent);
+  font-family: "Work Sans", sans-serif;
+  font-weight: 700;
+  font-size: 14.5px;
+  padding: 13px 22px;
+  border-radius: 26px;
+  box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.pdf-button:active {
+  transform: scale(0.97);
+}
+
+.pdf-status {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.section-title {
+  font-size: 1.15rem;
+  margin: 0 0 16px;
+}
+
+.stops {
+  list-style: none;
+  margin: 0 0 40px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stop {
+  display: flex;
+  gap: 14px;
+}
+
+.stop-number {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #ffffff;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stop-body {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+
+.stop-body h4 {
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+}
+
+.stop-body p.desc {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+
+.stop-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.map-frame {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  height: 320px;
+  margin-bottom: 40px;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.other-routes {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+}
+
+.other-routes h3 {
+  font-size: 1rem;
+  margin-bottom: 14px;
+}
+
+.route-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.route-links a {
+  display: block;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+}
+
+footer {
+  text-align: center;
+  padding: 30px 20px 10px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+/* Index page */
+
+.index-hero {
+  text-align: left;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 30px 0 20px;
+}
+
+@media (min-width: 560px) {
+  .theme-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.theme-card {
+  display: block;
+  text-decoration: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 20px 22px;
+  box-shadow: var(--shadow);
+}
+
+.theme-card .tag {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.theme-card h3 {
+  font-size: 1.15rem;
+  margin: 8px 0 6px;
+}
+
+.theme-card p {
+  font-size: 13.3px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
