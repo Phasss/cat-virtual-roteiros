@@ -217,8 +217,35 @@ a {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 16px 18px;
+  overflow: hidden;
   box-shadow: var(--shadow);
+}
+
+.stop-art {
+  position: relative;
+  height: 96px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+.stop-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.24) 0%, rgba(255, 255, 255, 0) 40%);
+}
+
+.stop-art-glyph {
+  position: relative;
+  z-index: 1;
+  opacity: 0.85;
+  transform: translate(10%, 16%) rotate(-6deg);
+}
+
+.stop-text {
+  padding: 16px 18px;
 }
 
 .stop-body h4 {
