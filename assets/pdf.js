@@ -10,7 +10,7 @@ function baixarRoteiroPDF() {
     var contentWidth = pageWidth - margin * 2;
     var y;
 
-    doc.setFillColor(14, 110, 108);
+    doc.setFillColor(22, 75, 122);
     doc.rect(0, 0, pageWidth, 112, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
@@ -23,7 +23,7 @@ function baixarRoteiroPDF() {
     doc.text(data.tagline, margin, 88, { maxWidth: contentWidth });
 
     y = 142;
-    doc.setTextColor(30, 40, 35);
+    doc.setTextColor(22, 33, 46);
     doc.setFontSize(10);
     doc.setFont("helvetica", "bold");
     var totalMin = data.route.walkMinutes + data.route.visitMinutes;
@@ -33,7 +33,7 @@ function baixarRoteiroPDF() {
       y
     );
     y += 22;
-    doc.setDrawColor(214, 222, 218);
+    doc.setDrawColor(213, 222, 230);
     doc.line(margin, y, pageWidth - margin, y);
     y += 26;
 
@@ -43,14 +43,14 @@ function baixarRoteiroPDF() {
         y = margin;
       }
 
-      doc.setFillColor(14, 110, 108);
+      doc.setFillColor(22, 75, 122);
       doc.circle(margin + 8, y - 4, 9, "F");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(9);
       doc.setFont("helvetica", "bold");
       doc.text(String(i + 1), margin + 8, y - 1, { align: "center" });
 
-      doc.setTextColor(22, 33, 29);
+      doc.setTextColor(22, 33, 46);
       doc.setFontSize(13);
       doc.setFont("helvetica", "bold");
       doc.text(stop.name, margin + 26, y, { maxWidth: contentWidth - 26 });
@@ -58,7 +58,7 @@ function baixarRoteiroPDF() {
 
       doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
-      doc.setTextColor(82, 96, 88);
+      doc.setTextColor(82, 96, 109);
       var descLines = doc.splitTextToSize(stop.description || "", contentWidth - 26);
       doc.text(descLines, margin + 26, y);
       y += descLines.length * 13 + 6;
