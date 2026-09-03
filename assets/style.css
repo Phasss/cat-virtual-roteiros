@@ -45,6 +45,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+.floating-recife-mark {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  width: 92px;
+  z-index: 40;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(16, 24, 36, 0.3));
+}
+
+.floating-recife-mark video {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 h1, h2, h3, h4 {
   font-family: "Fraunces", serif;
   margin: 0;
@@ -282,6 +298,69 @@ a {
 #map {
   width: 100%;
   height: 100%;
+}
+
+.tips-box {
+  background: var(--teal-soft);
+  border: 1px solid var(--teal);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 24px 0 34px;
+}
+
+.tips-box p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.intro-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 62ch;
+  margin: 24px 0 4px;
+}
+
+.practical-info {
+  margin: 40px 0;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+@media (min-width: 640px) {
+  .info-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+}
+
+.info-card h4 {
+  font-family: "Fraunces", serif;
+  font-size: 0.98rem;
+  margin: 0 0 8px;
+}
+
+.info-card p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin: 0;
 }
 
 .other-routes {
