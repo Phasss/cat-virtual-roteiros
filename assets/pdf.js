@@ -1,6 +1,6 @@
 function hexToRgb(hex) {
-  var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "#164B7A");
-  if (!m) return [22, 75, 122];
+  var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || "#1B2A6B");
+  if (!m) return [27, 42, 107];
   return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
 }
 
@@ -26,9 +26,9 @@ function baixarRoteiroPDF() {
     }
 
     // Cabeçalho
-    doc.setFillColor(22, 75, 122);
+    doc.setFillColor(27, 42, 107);
     doc.rect(0, 0, pageWidth, 112, "F");
-    doc.setFillColor(194, 42, 99);
+    doc.setFillColor(233, 30, 140);
     doc.rect(0, 112, pageWidth, 4, "F");
     doc.setTextColor(255, 255, 255);
     doc.setFont("helvetica", "bold");
