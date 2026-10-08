@@ -371,6 +371,61 @@ a {
   margin: 0;
 }
 
+.suggestions-box {
+  margin: 40px 0;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+.suggestions-intro {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 64ch;
+  margin: 0 0 18px;
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .suggestions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .suggestions-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.suggestion-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.suggestion-item h4 {
+  font-family: "Work Sans", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 3px;
+  color: var(--text);
+}
+
+.suggestion-item p {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 .other-routes {
   border-top: 1px solid var(--border);
   padding-top: 28px;
