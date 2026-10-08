@@ -426,6 +426,14 @@ a {
   margin: 0;
 }
 
+.suggestion-item p.desc {
+  font-family: "Work Sans", sans-serif;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 0 0 6px;
+}
+
 .other-routes {
   border-top: 1px solid var(--border);
   padding-top: 28px;
