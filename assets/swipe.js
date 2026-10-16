@@ -2,28 +2,23 @@
   "use strict";
 
   var MARCO_ZERO = { lat: -8.0631715, lng: -34.8711583 };
-  var DRAG_THRESHOLD = 110;
-  var VISIBLE_STACK = 3;
 
-  var deck = (window.LANDMARKS || []).slice();
-  var index = 0;
-  var likedIds = [];
-  var history = []; // { id, liked }
-  var isAnimating = false;
+  var deck = Array.isArray(window.LANDMARKS) ? window.LANDMARKS.slice() : [];
+  var selectedIds = [];
 
-  var stackEl = document.getElementById("swipe-stack");
-  var progressText = document.getElementById("swipe-progress-text");
-  var progressFill = document.getElementById("swipe-progress-fill");
-  var undoBtn = document.getElementById("swipe-undo");
-  var nopeBtn = document.getElementById("swipe-nope");
-  var likeBtn = document.getElementById("swipe-like");
-  var finishEarly = document.getElementById("swipe-finish-early");
+  var gridEl = document.getElementById("picker-grid");
+  var countEl = document.getElementById("picker-count");
+  var countWrap = countEl ? countEl.closest(".picker-bar-count") : null;
+  var finishBtn = document.getElementById("picker-finish");
   var deckSection = document.getElementById("swipe-section");
   var resultsSection = document.getElementById("swipe-results");
 
   var FALLBACK_ICON =
-    '<svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">' +
+    '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">' +
     '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>';
+
+  var CHECK_ICON =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 
   function haversine(a, b) {
     var R = 6371000;
@@ -35,67 +30,47 @@
     return 2 * R * Math.asin(Math.sqrt(x));
   }
 
-  function clamp(v, min, max) {
-    return Math.max(min, Math.min(max, v));
-  }
-
   // ---------------------------------------------------------------------
-  // Deck rendering
+  // Grid rendering
   // ---------------------------------------------------------------------
 
-  function updateProgress() {
-    var total = deck.length;
-    var done = Math.min(index, total);
-    progressText.textContent = done + " de " + total + " · " + likedIds.length + " escolhido" + (likedIds.length === 1 ? "" : "s");
-    progressFill.style.width = (total ? (done / total) * 100 : 0) + "%";
-    undoBtn.disabled = history.length === 0;
-    finishEarly.style.display = likedIds.length > 0 && index < total ? "inline-flex" : "none";
-  }
+  function buildTile(item) {
+    var tile = document.createElement("button");
+    tile.type = "button";
+    tile.className = "picker-tile";
+    tile.dataset.id = item.id;
+    tile.setAttribute("aria-pressed", "false");
 
-  function buildCard(item, stackPos) {
-    var card = document.createElement("div");
-    card.className = "swipe-card";
-    card.dataset.id = item.id;
-    card.style.transform =
-      "translateY(" + stackPos * 10 + "px) scale(" + (1 - stackPos * 0.045) + ")";
-    card.style.zIndex = String(100 - stackPos);
-
-    var fallback = document.createElement("div");
-    fallback.className = "swipe-card-fallback-bg";
-    fallback.style.position = "absolute";
-    fallback.style.inset = "0";
-    fallback.style.background =
+    var frame = document.createElement("div");
+    frame.className = "picker-tile-photo-frame";
+    frame.style.background =
       "linear-gradient(150deg, " + item.accent + " 0%, color-mix(in srgb, " + item.accent + " 55%, black) 100%)";
-    fallback.innerHTML = '<div class="swipe-card-fallback-icon">' + FALLBACK_ICON + "</div>";
-    card.appendChild(fallback);
+    frame.innerHTML = '<div class="picker-tile-fallback-icon">' + FALLBACK_ICON + "</div>";
 
     var img = document.createElement("img");
-    img.className = "swipe-card-photo";
+    img.className = "picker-tile-photo";
     img.alt = item.name;
     img.dataset.slug = item.id;
-    card.appendChild(img);
+    frame.appendChild(img);
 
     var scrim = document.createElement("div");
-    scrim.className = "swipe-card-scrim";
-    card.appendChild(scrim);
+    scrim.className = "picker-tile-scrim";
+    frame.appendChild(scrim);
 
     var text = document.createElement("div");
-    text.className = "swipe-card-text";
-    text.innerHTML =
-      "<h3>" + item.name + "</h3>" +
-      "<p>" + item.teaser + "</p>" +
-      '<div class="swipe-card-address">' + item.address + "</div>";
-    card.appendChild(text);
+    text.className = "picker-tile-text";
+    text.innerHTML = "<h4>" + item.name + "</h4><span>" + item.address + "</span>";
+    frame.appendChild(text);
 
-    var nope = document.createElement("div");
-    nope.className = "swipe-stamp nope";
-    nope.textContent = "Pular";
-    card.appendChild(nope);
+    var check = document.createElement("div");
+    check.className = "picker-tile-check";
+    check.innerHTML = CHECK_ICON;
+    frame.appendChild(check);
 
-    var like = document.createElement("div");
-    like.className = "swipe-stamp like";
-    like.textContent = "Quero";
-    card.appendChild(like);
+    tile.appendChild(frame);
+    tile.addEventListener("click", function () {
+      toggle(item.id, tile);
+    });
 
     if (window.CATPhotos) {
       window.CATPhotos.load(img, function () {
@@ -103,159 +78,56 @@
       });
     }
 
-    return card;
+    return tile;
   }
 
-  function renderStack() {
-    stackEl.innerHTML = "";
-    if (index >= deck.length) {
-      updateProgress();
-      showResults();
+  function renderGrid() {
+    if (!gridEl) return;
+    if (!deck.length) {
+      gridEl.innerHTML =
+        '<p style="grid-column: 1 / -1; text-align:center; color: var(--text-muted);">Não foi possível carregar os lugares agora. Recarregue a página para tentar de novo.</p>';
       return;
     }
-    var slice = deck.slice(index, index + VISIBLE_STACK);
-    // append back-to-front so the first (top) card is last in DOM (on top)
-    for (var i = slice.length - 1; i >= 0; i--) {
-      var card = buildCard(slice[i], i);
-      stackEl.appendChild(card);
-      if (i === 0) wireDrag(card);
-    }
-    updateProgress();
+    gridEl.innerHTML = "";
+    deck.forEach(function (item) {
+      gridEl.appendChild(buildTile(item));
+    });
   }
 
-  // ---------------------------------------------------------------------
-  // Drag handling (pointer events cover mouse + touch)
-  // ---------------------------------------------------------------------
-
-  function wireDrag(card) {
-    var startX = 0;
-    var startY = 0;
-    var dx = 0;
-    var dy = 0;
-    var dragging = false;
-    var likeStamp = card.querySelector(".swipe-stamp.like");
-    var nopeStamp = card.querySelector(".swipe-stamp.nope");
-
-    function onDown(e) {
-      dragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      card.style.transition = "none";
-      try {
-        card.setPointerCapture(e.pointerId);
-      } catch (err) {
-        /* ignore */
-      }
-    }
-
-    function onMove(e) {
-      if (!dragging) return;
-      dx = e.clientX - startX;
-      dy = e.clientY - startY;
-      var rotate = dx / 18;
-      card.style.transform = "translate(" + dx + "px, " + dy * 0.3 + "px) rotate(" + rotate + "deg)";
-      likeStamp.style.opacity = String(clamp(dx / 100, 0, 1));
-      nopeStamp.style.opacity = String(clamp(-dx / 100, 0, 1));
-    }
-
-    function onUp() {
-      if (!dragging) return;
-      dragging = false;
-      if (isAnimating) {
-        dx = 0;
-        dy = 0;
-        return;
-      }
-      if (Math.abs(dx) > DRAG_THRESHOLD) {
-        commit(dx > 0 ? "like" : "nope", card);
-      } else {
-        card.style.transition = "transform 0.25s ease";
-        card.style.transform = "translateY(0px) scale(1)";
-        likeStamp.style.opacity = "0";
-        nopeStamp.style.opacity = "0";
-      }
-      dx = 0;
-      dy = 0;
-    }
-
-    card.addEventListener("pointerdown", onDown);
-    card.addEventListener("pointermove", onMove);
-    card.addEventListener("pointerup", onUp);
-    card.addEventListener("pointercancel", onUp);
-  }
-
-  function commit(decision, card) {
-    if (isAnimating) return;
-    var item = deck[index];
-    history.push({ id: item.id, liked: decision === "like" });
-    if (decision === "like") likedIds.push(item.id);
-
-    if (card) {
-      isAnimating = true;
-      var flyX = decision === "like" ? window.innerWidth : -window.innerWidth;
-      card.style.transition = "transform 0.35s ease";
-      card.style.transform = "translate(" + flyX + "px, -40px) rotate(" + (decision === "like" ? 30 : -30) + "deg)";
-      card.addEventListener(
-        "transitionend",
-        function () {
-          isAnimating = false;
-          index++;
-          renderStack();
-        },
-        { once: true }
-      );
+  function toggle(id, tile) {
+    var pos = selectedIds.indexOf(id);
+    var nowSelected;
+    if (pos === -1) {
+      selectedIds.push(id);
+      nowSelected = true;
     } else {
-      index++;
-      renderStack();
+      selectedIds.splice(pos, 1);
+      nowSelected = false;
     }
+    tile.classList.toggle("selected", nowSelected);
+    tile.setAttribute("aria-pressed", nowSelected ? "true" : "false");
+    updateBar();
   }
 
-  function decide(decision) {
-    if (isAnimating || index >= deck.length) return;
-    var topCard = stackEl.querySelector('.swipe-card[data-id="' + deck[index].id + '"]');
-    commit(decision, topCard);
-  }
-
-  function undo() {
-    if (isAnimating) return;
-    var last = history.pop();
-    if (!last) return;
-    if (last.liked) {
-      var pos = likedIds.lastIndexOf(last.id);
-      if (pos !== -1) likedIds.splice(pos, 1);
+  function updateBar() {
+    var n = selectedIds.length;
+    countEl.textContent = String(n);
+    if (countWrap) {
+      countWrap.classList.remove("bump");
+      // restart the bump animation every time the count changes
+      void countWrap.offsetWidth;
+      countWrap.classList.add("bump");
     }
-    index = Math.max(0, index - 1);
-    if (resultsSection.classList.contains("visible")) {
-      resultsSection.classList.remove("visible");
-      deckSection.style.display = "";
-    }
-    renderStack();
+    finishBtn.classList.toggle("visible", n > 0);
   }
-
-  nopeBtn.addEventListener("click", function () {
-    decide("nope");
-  });
-  likeBtn.addEventListener("click", function () {
-    decide("like");
-  });
-  undoBtn.addEventListener("click", undo);
-  finishEarly.addEventListener("click", function () {
-    showResults();
-  });
-
-  document.addEventListener("keydown", function (e) {
-    if (resultsSection.classList.contains("visible")) return;
-    if (e.key === "ArrowLeft") decide("nope");
-    if (e.key === "ArrowRight") decide("like");
-  });
 
   // ---------------------------------------------------------------------
   // Results
   // ---------------------------------------------------------------------
 
-  function orderLiked() {
+  function orderSelected() {
     var items = deck.filter(function (d) {
-      return likedIds.indexOf(d.id) !== -1;
+      return selectedIds.indexOf(d.id) !== -1;
     });
     var remaining = items.slice();
     var ordered = [];
@@ -338,21 +210,12 @@
   }
 
   function showResults() {
+    if (!selectedIds.length) return;
+
     deckSection.style.display = "none";
     resultsSection.classList.add("visible");
 
-    var emptyEl = document.getElementById("swipe-results-empty");
-    var contentEl = document.getElementById("swipe-results-content");
-
-    if (likedIds.length === 0) {
-      emptyEl.style.display = "block";
-      contentEl.style.display = "none";
-      return;
-    }
-    emptyEl.style.display = "none";
-    contentEl.style.display = "block";
-
-    var ordered = orderLiked();
+    var ordered = orderSelected();
     var stops = ordered.map(function (o) {
       return {
         id: o.item.id,
@@ -397,23 +260,23 @@
     });
 
     renderMap(stops);
-  }
-
-  function restart() {
-    index = 0;
-    likedIds = [];
-    history = [];
-    isAnimating = false;
-    window.ROTEIRO_DATA = null;
-    resultsSection.classList.remove("visible");
-    deckSection.style.display = "";
-    renderStack();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  document.getElementById("swipe-restart").addEventListener("click", restart);
-  var restartFromEmpty = document.getElementById("swipe-restart-empty");
-  if (restartFromEmpty) restartFromEmpty.addEventListener("click", restart);
+  function restart() {
+    selectedIds = [];
+    window.ROTEIRO_DATA = null;
+    resultsSection.classList.remove("visible");
+    deckSection.style.display = "";
+    renderGrid();
+    updateBar();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-  renderStack();
+  if (finishBtn) finishBtn.addEventListener("click", showResults);
+  var restartBtn = document.getElementById("swipe-restart");
+  if (restartBtn) restartBtn.addEventListener("click", restart);
+
+  renderGrid();
+  updateBar();
 })();

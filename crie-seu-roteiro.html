@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Crie seu Roteiro — CAT Virtual</title>
-<meta name="description" content="Monte seu próprio roteiro pelo Recife Antigo: arraste os cards para escolher os lugares que você quer visitar e baixe o resultado em PDF com mapa. CAT Virtual, Rec'n'Play." />
+<meta name="description" content="Monte seu próprio roteiro pelo Recife Antigo: toque para escolher os lugares que você quer visitar e baixe o resultado em PDF com mapa. CAT Virtual, Rec'n'Play." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
@@ -21,48 +21,29 @@
 </div>
     <p class="hero-tag">Interativo</p>
     <h1>Crie seu Roteiro</h1>
-    <p class="tagline">Arraste, escolha os lugares que você quer visitar e baixe seu próprio roteiro em PDF</p>
+    <p class="tagline">Toque nos lugares que você quer visitar e baixe seu próprio roteiro em PDF</p>
   </div>
 </div>
 
 <div class="page">
   <div class="tips-box">
-  <p><strong>Como funciona:</strong> arraste o card para a <strong>direita</strong> (ou toque em ♥) se quiser visitar o lugar, e para a <strong>esquerda</strong> (ou toque em ✕) se quiser pular. No fim — ou a qualquer momento — você vê o roteiro montado, com mapa e opção de baixar em PDF.</p>
+  <p><strong>Como funciona:</strong> toque nos lugares que você quer visitar — eles ficam marcados com ✓. Toque de novo para desmarcar. Quando terminar, toque em "Ver meu roteiro" para montar o passeio, com mapa e opção de baixar em PDF.</p>
 </div>
 
   <section id="swipe-section">
-    <div class="swipe-progress">
-      <span id="swipe-progress-text">0 de 0</span>
-      <div class="swipe-progress-bar"><div class="swipe-progress-fill" id="swipe-progress-fill"></div></div>
+    <div class="picker-bar">
+      <span class="picker-bar-hint">Toque nos lugares que você quer visitar</span>
+      <span class="picker-bar-count"><span class="n" id="picker-count">0</span> escolhido(s)</span>
     </div>
 
-    <div class="swipe-stack" id="swipe-stack"></div>
+    <div class="picker-grid" id="picker-grid"></div>
 
-    <div class="swipe-controls">
-      <button class="swipe-btn undo" id="swipe-undo" title="Desfazer" aria-label="Desfazer">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.64-6.36L3 8"/><path d="M3 3v5h5"/></svg>
-      </button>
-      <button class="swipe-btn nope" id="swipe-nope" title="Pular" aria-label="Pular este lugar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-      </button>
-      <button class="swipe-btn like" id="swipe-like" title="Quero visitar" aria-label="Quero visitar este lugar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-      </button>
+    <div class="picker-finish-wrap">
+      <button class="pdf-button picker-finish" id="picker-finish">Ver meu roteiro →</button>
     </div>
-
-    <p style="text-align:center;">
-      <button class="btn-secondary" id="swipe-finish-early" style="display:none;">Já escolhi — ver meu roteiro →</button>
-    </p>
   </section>
 
   <section id="swipe-results" class="swipe-results">
-    <div id="swipe-results-empty" style="display:none;">
-      <div class="swipe-results-empty">
-        <p>Você não escolheu nenhum lugar dessa vez — tudo bem, pode tentar de novo!</p>
-        <p style="margin-top:14px;"><button class="btn-secondary" id="swipe-restart-empty">↺ Recomeçar</button></p>
-      </div>
-    </div>
-
     <div id="swipe-results-content">
       <h2 class="section-title">Seu roteiro ficou assim</h2>
       <div class="stat-row" style="margin-bottom: 22px;">
