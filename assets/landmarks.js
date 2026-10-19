@@ -101,7 +101,7 @@ window.LANDMARKS = [
   },
   {
     "id": "embaixada-bonecos-cera",
-    "name": "Embaixada de Bonecos de Cera",
+    "name": "Embaixada de Pernambuco",
     "address": "Rua do Bom Jesus, 183",
     "lat": -8.0621,
     "lng": -34.8716,
@@ -258,5 +258,45 @@ window.LANDMARKS = [
     "teaser": "Nascido em Palmares em 1895, Ascenso Ferreira integrou a primeira geração do Modernismo em Pernambuco e publicou seu livro de estreia,…",
     "description": "Nascido em Palmares em 1895, Ascenso Ferreira integrou a primeira geração do Modernismo em Pernambuco e publicou seu livro de estreia, Catimbó, em 1927. Com o inseparável chapéu de palha, aparece sentado sobre um fardo de jornais ao lado de pilhas de livros, convidando o visitante a sentar e contemplar o Cais da Alfândega.",
     "accent": "#E91E8C"
+  },
+  {
+    "id": "museu-afro-brasil-rolando-toro",
+    "name": "Museu de Artes Afro-Brasil Rolando Toro",
+    "address": "Rua Mariz e Barros, 328",
+    "lat": -8.0628779,
+    "lng": -34.8730474,
+    "teaser": "Inaugurado para reforçar o circuito cultural do Bairro do Recife, reúne um acervo afro global dedicado à ancestralidade e à arte…",
+    "description": "Inaugurado para reforçar o circuito cultural do Bairro do Recife, reúne um acervo afro global dedicado à ancestralidade e à arte afro-brasileira. Funciona de quarta a domingo, com entrada gratuita às quartas-feiras.",
+    "accent": "#1B2A6B"
+  },
+  {
+    "id": "palacio-do-comercio",
+    "name": "Palácio do Comércio",
+    "address": "Praça Rio Branco, 18",
+    "lat": -8.0628822,
+    "lng": -34.8715003,
+    "teaser": "Construído em 1915 para sediar a Associação Comercial de Pernambuco — a mais antiga entidade empresarial do estado —, é tombado pelo Iphan…",
+    "description": "Construído em 1915 para sediar a Associação Comercial de Pernambuco — a mais antiga entidade empresarial do estado —, é tombado pelo Iphan e abre para visitas guiadas de sexta a domingo, revelando um pouco da história da alta sociedade recifense.",
+    "accent": "#FF6B35"
+  },
+  {
+    "id": "atrio-paco-alfandega",
+    "name": "Átrio do Paço Alfândega",
+    "address": "Rua da Alfândega, 35",
+    "lat": -8.0649155,
+    "lng": -34.8738084,
+    "teaser": "Erguido entre 1720 e 1732 como convento e depois alfândega da cidade, o edifício ganhou vida nova como espaço de lojas às margens do…",
+    "description": "Erguido entre 1720 e 1732 como convento e depois alfândega da cidade, o edifício ganhou vida nova como espaço de lojas às margens do Capibaribe. O átrio reúne peças do ceramista Francisco Brennand e um terraço com vista panorâmica para o rio — ótimo para fotos.",
+    "accent": "#1B2A6B"
+  },
+  {
+    "id": "caranguejo-manguebeat",
+    "name": "Caranguejo do Manguebeat",
+    "address": "Cais da Alfândega",
+    "lat": -8.0652154,
+    "lng": -34.8741989,
+    "teaser": "Um caranguejo gigante de 11 por 6 metros celebra os 30 anos do Manguebeat às margens do Capibaribe.",
+    "description": "Um caranguejo gigante de 11 por 6 metros celebra os 30 anos do Manguebeat às margens do Capibaribe. Pintado pelo Coletivo Vacilante com símbolos do movimento — como caixas de som e o número 04, em referência ao manifesto Caranguejos com Cérebro —, ganhou moradia permanente no Recife Antigo em 2022.",
+    "accent": "#17B6A4"
   }
 ];
