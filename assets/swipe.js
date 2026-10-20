@@ -200,9 +200,9 @@
     var latlngs = points.map(function (p) {
       return [p.lat, p.lng];
     });
-    L.polyline(latlngs, { color: "#1B2A6B", weight: 3, dashArray: "1 8" }).addTo(mapInstance);
+    L.polyline(latlngs, { color: "#1B0CAD", weight: 3, dashArray: "1 8" }).addTo(mapInstance);
     points.forEach(function (p, i) {
-      L.circleMarker([p.lat, p.lng], { radius: 8, color: "#ffffff", weight: 2, fillColor: "#E91E8C", fillOpacity: 1 })
+      L.circleMarker([p.lat, p.lng], { radius: 8, color: "#ffffff", weight: 2, fillColor: "#FF00A5", fillOpacity: 1 })
         .addTo(mapInstance)
         .bindTooltip(String(i + 1) + ". " + p.name, { permanent: false });
     });
