@@ -50,7 +50,7 @@ body {
 }
 
 h1, h2, h3, h4 {
-  font-family: "Fraunces", serif;
+  font-family: "Baloo 2", sans-serif;
   margin: 0;
   text-wrap: balance;
 }
@@ -238,8 +238,6 @@ a {
 
 .stop-body {
   flex: 1;
-  display: flex;
-  align-items: flex-start;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -249,27 +247,17 @@ a {
 
 .stop-art {
   position: relative;
-  width: 92px;
-  height: 92px;
-  flex-shrink: 0;
-  margin: 14px 0 14px 14px;
-  border-radius: 10px;
+  width: 100%;
+  height: 220px;
   display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
 
 @media (max-width: 420px) {
   .stop-art {
-    width: 72px;
-    height: 72px;
-    margin: 12px 0 12px 12px;
-  }
-
-  .stop-art-glyph {
-    width: 34px;
-    height: 34px;
+    height: 170px;
   }
 }
 
@@ -284,7 +272,7 @@ a {
   position: relative;
   z-index: 1;
   opacity: 0.85;
-  transform: translate(10%, 16%) rotate(-6deg);
+  transform: scale(1.6);
   transition: opacity 0.2s ease;
 }
 
@@ -301,8 +289,6 @@ a {
 }
 
 .stop-text {
-  flex: 1;
-  min-width: 0;
   padding: 16px 18px;
 }
 
@@ -393,7 +379,6 @@ a {
 }
 
 .info-card h4 {
-  font-family: "Fraunces", serif;
   font-size: 0.98rem;
   margin: 0 0 8px;
 }
