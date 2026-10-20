@@ -1,7 +1,8 @@
 :root {
-  --bg: #f5f8fb;
+  /* Branco oficial "Recife É Pra Ficar" — Secretaria de Turismo e Lazer */
+  --bg: #f1f1f1;
   --surface: #ffffff;
-  --surface-2: #eef3f8;
+  --surface-2: #f1f1f1;
   --text: #16212e;
   --text-muted: #52606d;
   --border: #d8e2ea;
@@ -18,29 +19,6 @@
   --amarelo: #fae54e;
   --shadow: 0 1px 2px rgba(16, 24, 36, 0.06), 0 8px 24px -12px rgba(16, 24, 36, 0.18);
   --gradient-hero: linear-gradient(150deg, #1b0cad 0%, #1e4bd8 55%, #5db3f8 100%);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #10151f;
-    --surface: #161c26;
-    --surface-2: #1d2530;
-    --text: #eaeef4;
-    --text-muted: #9fabb8;
-    --border: #2b3542;
-    --navy: #2a1fd6;
-    --accent: #ff5cc2;
-    --accent-soft: #3a1f30;
-    --accent-2: #ffa766;
-    --accent-2-soft: #3a2716;
-    --teal: #7ed492;
-    --teal-soft: #163a22;
-    --azul-vivo: #4f79ff;
-    --azul-claro: #8cc9fb;
-    --amarelo: #fae54e;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 28px -12px rgba(0, 0, 0, 0.5);
-    --gradient-hero: linear-gradient(150deg, #150a7a 0%, #1e4bd8 55%, #5db3f8 100%);
-  }
 }
 
 * {
