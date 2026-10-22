@@ -4,8 +4,126 @@ function hexToRgb(hex) {
   return [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)];
 }
 
-function baixarRoteiroPDF() {
+// Web Mercator helpers (slippy-map tile math) — global pixel coords at a given zoom.
+function lon2px(lon, zoom) {
+  return ((lon + 180) / 360) * Math.pow(2, zoom) * 256;
+}
+
+function lat2px(lat, zoom) {
+  var rad = (lat * Math.PI) / 180;
+  return ((1 - Math.log(Math.tan(rad) + 1 / Math.cos(rad)) / Math.PI) / 2) * Math.pow(2, zoom) * 256;
+}
+
+async function buildStaticMapImage(stops, pxW, pxH) {
+  try {
+    if (!stops.length || typeof createImageBitmap === "undefined") return null;
+
+    var innerPad = 56;
+    var fitW = pxW - innerPad * 2;
+    var fitH = pxH - innerPad * 2;
+    var lats = stops.map(function (s) { return s.lat; });
+    var lngs = stops.map(function (s) { return s.lng; });
+    var minLat = Math.min.apply(null, lats);
+    var maxLat = Math.max.apply(null, lats);
+    var minLng = Math.min.apply(null, lngs);
+    var maxLng = Math.max.apply(null, lngs);
+
+    var zoom = 18;
+    while (zoom > 12) {
+      var w = lon2px(maxLng, zoom) - lon2px(minLng, zoom);
+      var h = lat2px(minLat, zoom) - lat2px(maxLat, zoom);
+      if (w <= fitW && h <= fitH) break;
+      zoom--;
+    }
+
+    var centerPxX = (lon2px(minLng, zoom) + lon2px(maxLng, zoom)) / 2;
+    var centerPxY = (lat2px(minLat, zoom) + lat2px(maxLat, zoom)) / 2;
+    var originPxX = centerPxX - pxW / 2;
+    var originPxY = centerPxY - pxH / 2;
+
+    var maxTileIndex = Math.pow(2, zoom) - 1;
+    var tileMinX = Math.max(0, Math.floor(originPxX / 256));
+    var tileMaxX = Math.min(maxTileIndex, Math.floor((originPxX + pxW - 1) / 256));
+    var tileMinY = Math.max(0, Math.floor(originPxY / 256));
+    var tileMaxY = Math.min(maxTileIndex, Math.floor((originPxY + pxH - 1) / 256));
+
+    var canvas = document.createElement("canvas");
+    canvas.width = pxW;
+    canvas.height = pxH;
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#eef3f8";
+    ctx.fillRect(0, 0, pxW, pxH);
+
+    var fetches = [];
+    var successCount = 0;
+    for (var tx = tileMinX; tx <= tileMaxX; tx++) {
+      for (var ty = tileMinY; ty <= tileMaxY; ty++) {
+        (function (tx, ty) {
+          var url = "https://tile.openstreetmap.org/" + zoom + "/" + tx + "/" + ty + ".png";
+          fetches.push(
+            fetch(url)
+              .then(function (r) {
+                if (!r.ok) throw new Error("tile " + r.status);
+                return r.blob();
+              })
+              .then(createImageBitmap)
+              .then(function (bmp) {
+                ctx.drawImage(bmp, tx * 256 - originPxX, ty * 256 - originPxY, 256, 256);
+                successCount++;
+              })
+              .catch(function () {})
+          );
+        })(tx, ty);
+      }
+    }
+
+    if (!fetches.length) return null;
+    await Promise.all(fetches);
+    if (successCount === 0) return null;
+
+    function projectStop(s) {
+      return [lon2px(s.lng, zoom) - originPxX, lat2px(s.lat, zoom) - originPxY];
+    }
+
+    ctx.setLineDash([7, 6]);
+    ctx.lineWidth = 3.5;
+    ctx.strokeStyle = "#1B0CAD";
+    ctx.beginPath();
+    stops.forEach(function (s, i) {
+      var p = projectStop(s);
+      if (i === 0) ctx.moveTo(p[0], p[1]);
+      else ctx.lineTo(p[0], p[1]);
+    });
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    stops.forEach(function (s, i) {
+      var p = projectStop(s);
+      var rgb = hexToRgb(s.accent);
+      ctx.beginPath();
+      ctx.arc(p[0], p[1], 12, 0, Math.PI * 2);
+      ctx.fillStyle = "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#ffffff";
+      ctx.stroke();
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 13px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(i + 1), p[0], p[1] + 1);
+    });
+
+    return canvas.toDataURL("image/png");
+  } catch (err) {
+    console.error("Falha ao montar mapa estático do PDF", err);
+    return null;
+  }
+}
+
+async function baixarRoteiroPDF() {
   var statusEl = document.getElementById("pdf-status");
+  if (statusEl) statusEl.textContent = "Gerando PDF…";
   try {
     var jsPDF = window.jspdf.jsPDF;
     var doc = new jsPDF({ unit: "pt", format: "a4" });
@@ -25,27 +143,7 @@ function baixarRoteiroPDF() {
       doc.text("pág. " + page, pageWidth - margin, pageHeight - 26, { align: "right" });
     }
 
-    function drawRouteMap(startY, stops) {
-      var mapHeight = 190;
-      if (startY + mapHeight > pageHeight - 70) {
-        drawFooter();
-        doc.addPage();
-        startY = margin + 10;
-      }
-
-      doc.setTextColor(22, 33, 46);
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(13);
-      doc.text("No mapa", margin, startY);
-      startY += 12;
-
-      var boxY = startY;
-      var boxH = mapHeight - 12;
-      doc.setFillColor(241, 241, 241);
-      doc.roundedRect(margin, boxY, contentWidth, boxH, 8, 8, "F");
-      doc.setDrawColor(216, 226, 234);
-      doc.roundedRect(margin, boxY, contentWidth, boxH, 8, 8, "S");
-
+    function drawSchematicRoute(boxY, boxH, stops) {
       var pad = 26;
       var innerW = contentWidth - pad * 2;
       var innerH = boxH - pad * 2;
@@ -61,8 +159,8 @@ function baixarRoteiroPDF() {
 
       function project(lat, lng) {
         var x = margin + pad + ((lng - minLng) / lngRange) * innerW;
-        var y2 = boxY + pad + (1 - (lat - minLat) / latRange) * innerH;
-        return [x, y2];
+        var yy = boxY + pad + (1 - (lat - minLat) / latRange) * innerH;
+        return [x, yy];
       }
 
       doc.setDrawColor(27, 12, 173);
@@ -87,13 +185,47 @@ function baixarRoteiroPDF() {
         doc.setFontSize(8);
         doc.text(String(i + 1), p[0], p[1] + 2.8, { align: "center" });
       });
+    }
+
+    async function drawRouteMap(startY, stops) {
+      var mapDisplayHeight = 260;
+      var blockHeight = 20 + mapDisplayHeight + 26;
+      if (startY + blockHeight > pageHeight - 70) {
+        drawFooter();
+        doc.addPage();
+        startY = margin + 10;
+      }
+
+      doc.setTextColor(22, 33, 46);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.text("No mapa", margin, startY);
+      startY += 14;
+
+      var boxY = startY;
+      var mapPxW = Math.round(contentWidth * 1.6);
+      var mapPxH = Math.round(mapDisplayHeight * 1.6);
+      var mapDataUrl = await buildStaticMapImage(stops, mapPxW, mapPxH);
+
+      if (mapDataUrl) {
+        doc.addImage(mapDataUrl, "PNG", margin, boxY, contentWidth, mapDisplayHeight);
+      } else {
+        doc.setFillColor(241, 241, 241);
+        doc.roundedRect(margin, boxY, contentWidth, mapDisplayHeight, 8, 8, "F");
+        drawSchematicRoute(boxY, mapDisplayHeight, stops);
+      }
+      doc.setDrawColor(216, 226, 234);
+      doc.roundedRect(margin, boxY, contentWidth, mapDisplayHeight, 8, 8, "S");
 
       doc.setTextColor(150, 150, 150);
       doc.setFont("helvetica", "italic");
       doc.setFontSize(7.5);
-      doc.text("Mapa esquemático, fora de escala — siga a ordem numerada das paradas.", margin, boxY + boxH + 14);
+      var caption = mapDataUrl
+        ? "Mapa: © colaboradores do OpenStreetMap — siga a ordem numerada das paradas."
+        : "Mapa esquemático, fora de escala — siga a ordem numerada das paradas.";
+      doc.text(caption, margin, boxY + mapDisplayHeight + 14);
 
-      return boxY + boxH + 28;
+      return boxY + mapDisplayHeight + 28;
     }
 
     // Cabeçalho
@@ -177,7 +309,7 @@ function baixarRoteiroPDF() {
       y += 18;
     });
 
-    y = drawRouteMap(y + 6, data.route.stops);
+    y = await drawRouteMap(y + 6, data.route.stops);
 
     y += 6;
     if (y > pageHeight - 120) {
