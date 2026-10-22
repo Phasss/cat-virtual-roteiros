@@ -25,6 +25,77 @@ function baixarRoteiroPDF() {
       doc.text("pág. " + page, pageWidth - margin, pageHeight - 26, { align: "right" });
     }
 
+    function drawRouteMap(startY, stops) {
+      var mapHeight = 190;
+      if (startY + mapHeight > pageHeight - 70) {
+        drawFooter();
+        doc.addPage();
+        startY = margin + 10;
+      }
+
+      doc.setTextColor(22, 33, 46);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.text("No mapa", margin, startY);
+      startY += 12;
+
+      var boxY = startY;
+      var boxH = mapHeight - 12;
+      doc.setFillColor(241, 241, 241);
+      doc.roundedRect(margin, boxY, contentWidth, boxH, 8, 8, "F");
+      doc.setDrawColor(216, 226, 234);
+      doc.roundedRect(margin, boxY, contentWidth, boxH, 8, 8, "S");
+
+      var pad = 26;
+      var innerW = contentWidth - pad * 2;
+      var innerH = boxH - pad * 2;
+
+      var lats = stops.map(function (s) { return s.lat; });
+      var lngs = stops.map(function (s) { return s.lng; });
+      var minLat = Math.min.apply(null, lats);
+      var maxLat = Math.max.apply(null, lats);
+      var minLng = Math.min.apply(null, lngs);
+      var maxLng = Math.max.apply(null, lngs);
+      var latRange = Math.max(maxLat - minLat, 0.0006);
+      var lngRange = Math.max(maxLng - minLng, 0.0006);
+
+      function project(lat, lng) {
+        var x = margin + pad + ((lng - minLng) / lngRange) * innerW;
+        var y2 = boxY + pad + (1 - (lat - minLat) / latRange) * innerH;
+        return [x, y2];
+      }
+
+      doc.setDrawColor(27, 12, 173);
+      doc.setLineWidth(1.3);
+      doc.setLineDashPattern([3, 2], 0);
+      for (var i = 0; i < stops.length - 1; i++) {
+        var p1 = project(stops[i].lat, stops[i].lng);
+        var p2 = project(stops[i + 1].lat, stops[i + 1].lng);
+        doc.line(p1[0], p1[1], p2[0], p2[1]);
+      }
+      doc.setLineDashPattern([], 0);
+
+      stops.forEach(function (stop, i) {
+        var p = project(stop.lat, stop.lng);
+        var rgb = hexToRgb(stop.accent);
+        doc.setDrawColor(255, 255, 255);
+        doc.setLineWidth(1.6);
+        doc.setFillColor(rgb[0], rgb[1], rgb[2]);
+        doc.circle(p[0], p[1], 8, "FD");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.text(String(i + 1), p[0], p[1] + 2.8, { align: "center" });
+      });
+
+      doc.setTextColor(150, 150, 150);
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(7.5);
+      doc.text("Mapa esquemático, fora de escala — siga a ordem numerada das paradas.", margin, boxY + boxH + 14);
+
+      return boxY + boxH + 28;
+    }
+
     // Cabeçalho
     doc.setFillColor(27, 12, 173);
     doc.rect(0, 0, pageWidth, 112, "F");
@@ -105,6 +176,8 @@ function baixarRoteiroPDF() {
       doc.line(margin + 28, y, pageWidth - margin, y);
       y += 18;
     });
+
+    y = drawRouteMap(y + 6, data.route.stops);
 
     y += 6;
     if (y > pageHeight - 120) {

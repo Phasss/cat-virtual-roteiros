@@ -529,12 +529,6 @@ footer a:focus-visible {
   color: rgba(255, 255, 255, 0.85);
 }
 
-.footer-sub {
-  margin: 6px 0 0;
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.55);
-}
 
 /* Index page */
 
