@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seu Roteiro — CAT Virtual</title>
+<meta name="description" content="Roteiro pelo Recife Antigo montado no totem CAT Virtual, no Rec'n'Play: paradas em ordem, mapa e PDF para levar no celular." />
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="floating-recife-mark"><video src="assets/media/marca-recife.webm" autoplay loop muted playsinline></video></div>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="brand-row">
+  <span class="brand-logo-link"><img class="brand-logo" src="assets/brand/recife-logo-white.png" alt="Recife é pra ficar" /></span>
+  <span class="brand-divider">·</span>
+  <span class="brand-name">CAT VIRTUAL · REC'N'PLAY</span>
+</div>
+    <p class="hero-tag">Criado no totem</p>
+    <h1>Seu Roteiro</h1>
+    <p class="tagline">O passeio que você montou no CAT Virtual, pronto para fazer a pé pelo Recife Antigo</p>
+  </div>
+</div>
+
+<div class="page">
+  <section id="roteiro-content" class="roteiro-content">
+    <div class="stat-row" style="margin-bottom: 22px;">
+      <span class="stat-chip" id="stat-paradas">0 paradas</span>
+      <span class="stat-chip" id="stat-tempo">~0 min no total</span>
+      <span class="stat-chip" id="stat-distancia">0 m a pé</span>
+    </div>
+
+    <div class="result-actions">
+      <button class="pdf-button" id="pdf-btn">⬇ Baixar meu roteiro em PDF</button>
+      <span class="pdf-status" id="pdf-status"></span>
+    </div>
+
+    <h2 class="section-title">Suas paradas</h2>
+    <ol class="stops" id="roteiro-list"></ol>
+
+    <h2 class="section-title">No mapa</h2>
+    <div class="map-frame"><div id="map"></div></div>
+  </section>
+
+  <section id="roteiro-vazio" class="roteiro-vazio">
+    <h2 class="section-title">Não encontramos esse roteiro</h2>
+    <p>Este link não traz nenhuma parada válida. Monte seu roteiro no totem CAT Virtual e escaneie o QR code que aparece no final.</p>
+  </section>
+
+</div>
+
+<footer>
+  <img class="footer-logo" src="assets/brand/recife-logo-white.png" alt="Recife é pra ficar" />
+  <p class="footer-credit">CAT Virtual — totem de atendimento ao turista · Rec'n'Play, Recife Antigo</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="assets/pdf.js"></script>
+<script src="assets/landmarks.js"></script>
+<script src="assets/photos.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="assets/roteiro-totem.js"></script>
+</body>
+</html>
