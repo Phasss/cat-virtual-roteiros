@@ -390,6 +390,15 @@ a {
   margin: 0;
 }
 
+/* Selo de realização — usado só no roteiro "Além das Portas", que nasceu
+   do projeto de sinalização do Recentro (Prefeitura do Recife). */
+.info-card-logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  margin-bottom: 10px;
+}
+
 .suggestions-box {
   margin: 40px 0;
   padding-top: 30px;
