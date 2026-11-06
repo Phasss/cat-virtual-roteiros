@@ -120,16 +120,6 @@ window.LANDMARKS = [
     "accent": "#FF00A5"
   },
   {
-    "id": "centro-de-artesanato-de-pernambuco",
-    "name": "Centro de Artesanato de Pernambuco",
-    "address": "Praça do Marco Zero, s/n",
-    "lat": -8.0622691,
-    "lng": -34.8706954,
-    "teaser": "Espaço voltado à valorização da produção artesanal do estado, reunindo obras de mestres artesãos em cerâmica, madeira, couro e têxtil.",
-    "description": "Espaço voltado à valorização da produção artesanal do estado, reunindo obras de mestres artesãos em cerâmica, madeira, couro e têxtil.",
-    "accent": "#FF00A5"
-  },
-  {
     "id": "museu-cais-do-sertao",
     "name": "Museu Cais do Sertão",
     "address": "Av. Alfredo Lisboa, s/n",

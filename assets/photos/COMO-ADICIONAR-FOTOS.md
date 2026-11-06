@@ -32,7 +32,6 @@ precisa mexer em nenhum HTML.
 - `caixa-cultural-recife` — CAIXA Cultural Recife
 - `embaixada-bonecos-cera` — Embaixada de Bonecos de Cera
 - `embaixada-bonecos-gigantes` — Embaixada dos Bonecos Gigantes
-- `centro-de-artesanato-de-pernambuco` — Centro de Artesanato de Pernambuco
 - `museu-cais-do-sertao` — Museu Cais do Sertão
 - `armazem-14` — Armazém 14
 - `livraria-jaqueira` — Livraria Jaqueira - Recife Antigo
