@@ -130,16 +130,6 @@ window.LANDMARKS = [
     "accent": "#1B0CAD"
   },
   {
-    "id": "armazem-14",
-    "name": "Armazém 14",
-    "address": "Av. Alfredo Lisboa, s/n",
-    "lat": -8.0657728,
-    "lng": -34.8723927,
-    "teaser": "Antigo armazém portuário transformado em espaço de eventos, com vista privilegiada para o Marco Zero e o mar.",
-    "description": "Antigo armazém portuário transformado em espaço de eventos, com vista privilegiada para o Marco Zero e o mar.",
-    "accent": "#1B0CAD"
-  },
-  {
     "id": "livraria-jaqueira",
     "name": "Livraria Jaqueira - Recife Antigo",
     "address": "Rua Madre de Deus, 110",
